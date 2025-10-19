@@ -66,9 +66,20 @@ def compare_articles(text_a, text_b, title_a="Article A", title_b="Article B"):
     return metrics_a, metrics_b
 
 
+def truncate_title(title, max_length=60):
+    """Truncate title if too long."""
+    if len(title) <= max_length:
+        return title
+    return title[:max_length] + "..."
+
+
 def create_comparison_chart(top_a_pos, top_a_neg, top_b_pos, top_b_neg,
                            metrics_a, metrics_b, title_a, title_b):
     """Create side-by-side comparison visualization with dashboard."""
+    
+    # Truncate titles for display
+    title_a_short = truncate_title(title_a, 50)
+    title_b_short = truncate_title(title_b, 50)
     
     fig = plt.figure(figsize=(14, 8))
     
@@ -79,15 +90,15 @@ def create_comparison_chart(top_a_pos, top_a_neg, top_b_pos, top_b_neg,
     
     # Article A chart (left)
     ax1 = fig.add_subplot(gs[0, 0])
-    plot_article_bars(ax1, top_a_pos, top_a_neg, title_a, metrics_a)
+    plot_article_bars(ax1, top_a_pos, top_a_neg, title_a_short, metrics_a)
     
     # Article B chart (right)
     ax2 = fig.add_subplot(gs[0, 1])
-    plot_article_bars(ax2, top_b_pos, top_b_neg, title_b, metrics_b)
+    plot_article_bars(ax2, top_b_pos, top_b_neg, title_b_short, metrics_b)
     
     # Dashboard (bottom, spanning both columns)
     ax3 = fig.add_subplot(gs[1, :])
-    plot_dashboard(ax3, metrics_a, metrics_b, title_a, title_b)
+    plot_dashboard(ax3, metrics_a, metrics_b, title_a_short, title_b_short)
     
     plt.show()
 
@@ -123,25 +134,19 @@ def plot_dashboard(ax, metrics_a, metrics_b, title_a, title_b):
             fontsize=14, fontweight='bold', transform=ax.transAxes)
     
     # Article A metrics (left side)
-    y_pos = 0.65
-    ax.text(0.25, y_pos, title_a, ha='center', fontweight='bold',
-            fontsize=11, transform=ax.transAxes)
-    
-    ax.text(0.25, y_pos - 0.2, f"Avg Score: {metrics_a['avg_score']:.3f}",
+    y_pos = 0.6
+    ax.text(0.25, y_pos, f"Avg Score: {metrics_a['avg_score']:.3f}",
             ha='center', fontsize=10, transform=ax.transAxes)
     
-    ax.text(0.25, y_pos - 0.4, 
+    ax.text(0.25, y_pos - 0.25, 
             f"Positive: {metrics_a['positive']}  |  Negative: {metrics_a['negative']}",
             ha='center', fontsize=9, transform=ax.transAxes)
     
     # Article B metrics (right side)
-    ax.text(0.75, y_pos, title_b, ha='center', fontweight='bold',
-            fontsize=11, transform=ax.transAxes)
-    
-    ax.text(0.75, y_pos - 0.2, f"Avg Score: {metrics_b['avg_score']:.3f}",
+    ax.text(0.75, y_pos, f"Avg Score: {metrics_b['avg_score']:.3f}",
             ha='center', fontsize=10, transform=ax.transAxes)
     
-    ax.text(0.75, y_pos - 0.4,
+    ax.text(0.75, y_pos - 0.25,
             f"Positive: {metrics_b['positive']}  |  Negative: {metrics_b['negative']}",
             ha='center', fontsize=9, transform=ax.transAxes)
     
@@ -149,7 +154,7 @@ def plot_dashboard(ax, metrics_a, metrics_b, title_a, title_b):
     diff = metrics_a['avg_score'] - metrics_b['avg_score']
     color = '#2E8B57' if diff > 0 else '#DC143C' if diff < 0 else 'gray'
     
-    ax.text(0.5, y_pos - 0.2, f"Difference: {diff:+.3f}",
+    ax.text(0.5, y_pos, f"Difference: {diff:+.3f}",
             ha='center', fontsize=10, fontweight='bold',
             color=color, transform=ax.transAxes)
     
@@ -157,15 +162,43 @@ def plot_dashboard(ax, metrics_a, metrics_b, title_a, title_b):
     ax.plot([0.5, 0.5], [0, 0.8], 'k-', alpha=0.2, transform=ax.transAxes)
 
 
+def list_topics(json_path="test_articles.json"):
+    """List all available topics in the JSON file."""
+    with open(json_path, 'r') as f:
+        data = json.load(f)
+    
+    print("\n" + "="*60)
+    print("AVAILABLE TOPICS")
+    print("="*60)
+    for key, topic in data['topics'].items():
+        print(f"\n  {key}")
+        print(f"    Name: {topic['name']}")
+        print(f"    Description: {topic['description']}")
+    print("\n" + "="*60 + "\n")
+
+
 def main():
     """Main function to run comparison."""
     import sys
     
-    # Get topic from command line or use default
-    topic = sys.argv[1] if len(sys.argv) > 1 else None
+    # Check for command line arguments
+    if len(sys.argv) > 1:
+        if sys.argv[1] == '--list':
+            json_file = sys.argv[2] if len(sys.argv) > 2 else "test_articles.json"
+            list_topics(json_file)
+            return
+        elif sys.argv[1] == '--file':
+            json_file = sys.argv[2] if len(sys.argv) > 2 else "test_articles.json"
+            topic = sys.argv[3] if len(sys.argv) > 3 else None
+        else:
+            json_file = "test_articles.json"
+            topic = sys.argv[1]
+    else:
+        json_file = "test_articles.json"
+        topic = None
     
-    # Load test data
-    data = load_articles(topic=topic)
+    # Load data
+    data = load_articles(json_path=json_file, topic=topic)
     
     print(f"Topic: {data['name']}")
     print(f"Description: {data['description']}")

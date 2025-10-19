@@ -1,0 +1,78 @@
+{
+  "topics": {
+    "ai_labor_automation": {
+        "name": "AI and Labor Automation",
+        "description": "Contrasting views on how AI reshapes jobs, entry-level roles, and employment projections.",
+        "article_a": {
+          "title": "How AI is reshaping the career ladder, and other trends in jobs and skills on Labour Day",
+          "source": "World Economic Forum",
+          "stance": "con",
+          "content": "This roundup argues that AI poses a significant risk to entry-level white-collar jobs and could narrow early career pathways. It cites research suggesting AI can automate more than half of tasks for some roles (e.g., sales reps, market research analysts), notes 40% of employers expect workforce reductions where AI can automate tasks, and highlights challenges such as isolation and career advancement barriers for remote/AI-mediated work. While it acknowledges upskilling and new opportunities, the framing emphasizes threats to social mobility and the need for strategic workforce preparation."
+        },
+        "article_b": {
+          "title": "Incorporating AI impacts in BLS employment projections: occupational case studies",
+          "source": "U.S. Bureau of Labor Statistics — Monthly Labor Review (Feb 2025)",
+          "stance": "neutral",
+          "content": "BLS explains how it incorporates AI into 10-year employment projections. The article emphasizes uncertainty and gradual adoption, using case studies: some occupations (e.g., insurance adjusters, credit analysts) may see declines; others (software developers, database architects, many engineers, lawyers) are projected to grow as AI augments tasks and creates demand for infrastructure and oversight. The stance is measured and data-driven: AI can raise productivity and shift task composition, but broad, rapid job loss is not assumed without clear evidence."
+        }
+      },
+
+      "ai_labor_automation": {
+        "name": "AI and Labor Automation",
+        "description": "Contrasting views on how AI reshapes jobs, entry-level roles, and employment projections.",
+        "article_a": {
+          "title": "How AI is reshaping the career ladder, and other trends in jobs and skills on Labour Day",
+          "source": "World Economic Forum",
+          "stance": "con",
+          "url": "https://www.weforum.org/stories/2025/04/ai-jobs-international-workers-day/",
+          "content": "This roundup argues that AI poses a significant risk to entry-level white-collar jobs and could narrow early career pathways. It cites research suggesting AI can automate more than half of tasks for some roles, notes that many employers expect workforce reductions where AI can automate tasks, and highlights challenges like isolation and career advancement barriers. While it acknowledges upskilling and new opportunities, the framing emphasizes threats to social mobility and the need for strategic preparation."
+        },
+        "article_b": {
+          "title": "Incorporating AI impacts in BLS employment projections: occupational case studies",
+          "source": "U.S. Bureau of Labor Statistics — Monthly Labor Review (Feb 2025)",
+          "stance": "neutral",
+          "url": "https://doi.org/10.21916/mlr.2025.1",
+          "content": "BLS explains how it incorporates AI into 10-year employment projections. The stance is measured and data-driven: some occupations (e.g., insurance adjusters, credit analysts) may see declines; others (software developers, database architects, many engineers, lawyers) are projected to grow as AI augments tasks and creates demand for infrastructure and oversight. AI can raise productivity and shift task composition, but broad, rapid job loss is not assumed without clear evidence."
+        }
+      },
+      "trump_tariffs": {
+        "name": "Trump's Tariffs",
+        "description": "Public opinion and editorial perspectives on the Trump administration’s tariff policies.",
+        "article_a": {
+          "title": "How Americans view the Trump administration’s tariff policies and the GOP’s budget and tax bill",
+          "source": "Pew Research Center",
+          "stance": "con",
+          "url": "https://www.pewresearch.org/politics/2025/08/14/how-americans-view-the-trump-administrations-tariff-policies-and-the-gops-budget-and-tax-bill",
+          "content": "National survey finds that roughly six-in-ten Americans disapprove of increased tariffs; majorities expect mostly negative long-term effects on the country and on themselves. Views are strongly partisan: Republicans are more supportive, Democrats largely opposed. Overall assessments of the GOP budget/tax law are also more negative than positive."
+        },
+        "article_b": {
+          "title": "Trump’s tariff plan seems to be working — proving all the naysayers wrong",
+          "source": "New York Post (Editorial Board)",
+          "stance": "pro",
+          "url": "https://nypost.com/2025/07/25/opinion/trumps-tariff-plan-seems-to-be-working-proving-all-the-naysayers-wrong/",
+          "content": "Editorial argues the tariff strategy is delivering results via new trade deals and market stability, with little inflation impact and added government revenue. It frames developments with Japan, Indonesia, the Philippines, and potential EU alignment as evidence the approach benefits U.S. consumers and producers, countering predictions of catastrophic fallout."
+        }
+      },
+
+      "ai_bubble_boom": {
+        "name": "AI Bubble vs. Boom",
+        "description": "Contrasting views on whether the current AI surge is a sustainable boom or a speculative bubble.",
+        "article_a": {
+          "title": "Don’t fear the AI bubble, it’s about to unlock an $8 trillion opportunity according to Goldman Sachs",
+          "source": "Fortune",
+          "stance": "pro",
+          "url": "https://fortune.com/2025/10/16/ai-bubble-will-unlock-an-8-trillion-opportunity-goldman-sachs/",
+          "content": "Fortune reports on bullish research from Goldman Sachs (and supportive notes from JPMorgan and Wedbush) arguing the AI spending boom is sustainable. AI investment is <1% of U.S. GDP—smaller than prior tech cycles—and Goldman estimates up to $8T in present-discounted value from productivity gains. Hyperscaler capex is projected to keep rising sharply, and demand for next-gen GPUs remains far above supply, suggesting the cycle has room to run."
+        },
+        "article_b": {
+          "title": "Opinions split over AI bubble after billions invested",
+          "source": "Reuters",
+          "stance": "con",
+          "url": "https://www.reuters.com/business/finance/opinions-split-over-ai-bubble-after-billions-invested-2025-10-16/",
+          "content": "Reuters compiles cautionary views that AI may be in bubble territory: a BoA survey shows a majority of fund managers see an AI bubble; the Bank of England warns of correction risks; industry voices note hype and sky-high valuations. Others argue spending is sustainable but winners are uncertain. Overall tone emphasizes the possibility of overinvestment and market volatility even as participation remains high."
+        }
+      }
+
+    
+}  
+}
