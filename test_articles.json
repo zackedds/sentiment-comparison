@@ -1,0 +1,38 @@
+{
+  "topics": {
+    "demo_remote_work": {
+      "name": "Remote Work",
+      "description": "Perspectives on remote vs. office work",
+      "article_a": {
+        "title": "Remote Work Revolution: The Future is Here",
+        "source": "TechForward Magazine",
+        "stance": "pro",
+        "content": "Remote work has transformed the modern workplace, offering unprecedented flexibility and productivity gains. Studies consistently show that remote employees are more engaged, report higher job satisfaction, and demonstrate increased creativity. Companies embracing remote work see significant cost savings on office space while attracting top talent from around the globe. The technology supporting remote collaboration has never been more sophisticated, with advanced video conferencing and project management tools. Employees enjoy better work-life balance, reduced commute stress, and the ability to design their optimal work environment. Forward-thinking organizations recognize that remote work is the future of productive, sustainable employment."
+      },
+      "article_b": {
+        "title": "The Hidden Costs of Remote Work",
+        "source": "Business Leadership Weekly",
+        "stance": "con",
+        "content": "While remote work gained popularity during the pandemic, its long-term consequences are becoming increasingly apparent. Many companies report declining team cohesion, reduced innovation, and challenges in maintaining company culture. Remote employees often struggle with isolation, blurred work-life boundaries, and difficulty accessing mentorship opportunities. Technical issues, security concerns, and the lack of spontaneous collaboration are significant drawbacks. Studies indicate that remote workers face career advancement challenges and may miss crucial networking opportunities. The initial cost savings are often offset by increased technology expenses and reduced productivity. Traditional office environments foster creativity but remote work creates barriers that many employees find difficult to overcome."
+      }
+    },
+    "demo_electric_vehicles": {
+      "name": "Electric Vehicles",
+      "description": "The debate over electric vs. gas-powered transportation",
+      "article_a": {
+        "title": "Electric Vehicles: Driving Toward a Sustainable Future",
+        "source": "Green Tech Today",
+        "stance": "pro",
+        "content": "Electric vehicles represent a revolutionary shift toward sustainable transportation. With zero emissions, incredible acceleration, and advanced technology, EVs are transforming how we think about cars. Battery technology has improved dramatically, offering impressive range and faster charging times. The total cost of ownership is lower due to reduced maintenance and fuel costs. Government incentives make EVs increasingly affordable. Major automakers are investing billions in electric technology, signaling confidence in this exciting future. Clean energy and innovation are driving us toward a healthier planet."
+      },
+      "article_b": {
+        "title": "The Electric Vehicle Problem Nobody Talks About",
+        "source": "Automotive Reality Check",
+        "stance": "con",
+        "content": "Electric vehicles face serious challenges that proponents often ignore. The environmental cost of battery production is devastating, requiring rare earth mining that damages ecosystems. Charging infrastructure remains inadequate in most areas, causing range anxiety and inconvenience. Grid capacity struggles to support widespread EV adoption. Battery degradation reduces vehicle value and creates disposal problems. High purchase prices exclude most consumers despite subsidies. Cold weather performance is poor. The electricity powering EVs often comes from fossil fuels anyway. These significant drawbacks make EVs impractical for many drivers."
+      }
+    }
+
+    
+}  
+}
