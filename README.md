@@ -6,8 +6,8 @@ A clean, lightweight Python tool for sentiment analysis using NLTK VADER.
 
 - **Single Article Analysis**: Analyze sentiment of individual texts
 - **Article Comparison**: Side-by-side comparison of two articles
-- **Minimal Dashboard**: Key metrics at a glance
-- **Clean Visualizations**: Simple, effective charts
+- **Dataset Statistics**: Corpus-wide word sentiment distribution analysis
+- **Clean Visualizations**: Professional charts with minimal code
 
 ## Quick Start
 
@@ -20,16 +20,45 @@ python bias_snapshot.py "Your text here"
 
 # Compare two articles
 python compare_articles.py
+
+# Generate dataset statistics
+python dataset_stats.py data/real_articles.json
 ```
 
-## Files
+## Project Structure
 
-- `bias_snapshot.py` - Single article sentiment analysis
-- `compare_articles.py` - Compare two articles side-by-side
-- `dataset_stats.py` - Corpus-wide statistics and word distribution analysis
-- `test_articles.json` - Sample article data for testing
-- `real_articles copy.json` - Real-world articles for analysis
-- `requirements.txt` - Python dependencies
+```
+bias_snapshot/
+├── initial/                   # MVP for initial evaluation
+│   ├── bias_snapshot_mvp.py   # Single-file MVP demo
+│   ├── README_MVP.md          # MVP documentation
+│   └── mvp_*.png/csv          # Generated outputs
+├── data/                      # Input data
+│   ├── test_articles.json     # Demo articles
+│   └── real_articles.json     # Real-world articles
+├── output/                    # Generated files
+│   ├── *.png                  # Visualizations
+│   └── *.csv                  # Data exports
+├── bias_snapshot.py           # Single article analysis
+├── compare_articles.py        # Article comparison
+├── dataset_stats.py           # Corpus statistics
+└── requirements.txt           # Dependencies
+```
+
+## MVP / Initial Evaluation
+
+For the initial evaluation version (simpler, focused on requirements):
+
+```bash
+cd initial/
+python bias_snapshot_mvp.py
+```
+
+See `initial/README_MVP.md` for details. This version demonstrates:
+- VADER sentiment analysis output
+- Preprocessing evidence (tokenization, cleaning)
+- Dataset adequacy validation
+- Basic exploratory data analysis
 
 ## Single Article Analysis
 
@@ -53,15 +82,15 @@ python compare_articles.py
 
 # List all available topics in a file
 python compare_articles.py --list
-python compare_articles.py --list "real_articles copy.json"
+python compare_articles.py --list data/real_articles.json
 
 # Compare a specific topic from test_articles.json
 python compare_articles.py demo_remote_work
 
 # Compare from a different JSON file
-python compare_articles.py --file "real_articles copy.json" ai_labor_automation
-python compare_articles.py --file "real_articles copy.json" trump_tariffs
-python compare_articles.py --file "real_articles copy.json" ai_bubble_boom
+python compare_articles.py --file data/real_articles.json ai_labor_automation
+python compare_articles.py --file data/real_articles.json trump_tariffs
+python compare_articles.py --file data/real_articles.json ai_bubble_boom
 ```
 
 **Output:**
@@ -71,11 +100,11 @@ python compare_articles.py --file "real_articles copy.json" ai_bubble_boom
   - Positive/negative word counts
   - Sentiment difference between articles (color-coded)
 
-**Demo Topics (test_articles.json):**
+**Demo Topics (data/test_articles.json):**
 - `demo_remote_work` - Perspectives on remote vs. office work
 - `demo_electric_vehicles` - Electric vs. gas-powered transportation debate
 
-**Real Topics (real_articles copy.json):**
+**Real Topics (data/real_articles.json):**
 - `ai_labor_automation` - AI's impact on jobs and employment
 - `trump_tariffs` - Trump administration tariff policies
 - `ai_bubble_boom` - AI investment: bubble or sustainable boom
@@ -130,15 +159,15 @@ Analyze word-level sentiment distribution across your entire corpus:
 
 ```bash
 # Analyze all articles in a dataset
-python dataset_stats.py "real_articles copy.json"
+python dataset_stats.py data/real_articles.json
 ```
 
 **Output:**
-- Console statistics: corpus overview, word distribution, top frequent words
-- Article comparison table (exported to CSV)
-- Two visualizations:
-  - `word_sentiment_distribution.png` - Distribution of non-neutral word scores (histogram + pos/neg split)
-  - `sentiment_breakdown.png` - Overall categories (pie chart) + granular breakdown (bar chart)
+- Console: corpus overview, sentiment distribution, top frequent words, article table
+- Saved to `output/`:
+  - `word_distribution.png` - Positive/negative word distribution (excluding neutral)
+  - `sentiment_breakdown.png` - Pie chart + granular 6-category breakdown
+  - `article_stats.csv` - Article-level comparison data
 
 **Key Insights:**
 - Shows word sentiment follows a distribution (most words are neutral)

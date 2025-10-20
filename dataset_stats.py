@@ -81,21 +81,51 @@ def create_distribution_plot(word_scores):
 
 def create_breakdown_plot(word_scores):
     """Create sentiment category breakdown."""
-    # Simple categorization
-    positive = sum(1 for s in word_scores if s > 0.05)
-    negative = sum(1 for s in word_scores if s < -0.05)
-    neutral = sum(1 for s in word_scores if -0.05 <= s <= 0.05)
+    # Granular categorization
+    strong_positive = sum(1 for s in word_scores if s > 0.3)
+    positive = sum(1 for s in word_scores if 0.05 < s <= 0.3)
+    weak_positive = sum(1 for s in word_scores if 0 < s <= 0.05)
+    neutral = sum(1 for s in word_scores if s == 0)
+    weak_negative = sum(1 for s in word_scores if -0.05 <= s < 0)
+    negative = sum(1 for s in word_scores if -0.3 <= s < -0.05)
+    strong_negative = sum(1 for s in word_scores if s < -0.3)
     
-    fig, ax = plt.subplots(1, 1, figsize=(10, 6))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
     
-    # Pie chart
-    sizes = [positive, negative, neutral]
-    labels = [f'Positive\n{positive:,}', f'Negative\n{negative:,}', f'Neutral\n{neutral:,}']
+    # Left: Pie chart - 3 categories
+    positive_total = strong_positive + positive + weak_positive
+    negative_total = strong_negative + negative + weak_negative
+    
+    sizes = [positive_total, negative_total, neutral]
+    labels = [f'Positive\n{positive_total:,}', f'Negative\n{negative_total:,}', f'Neutral\n{neutral:,}']
     colors = ['#2E8B57', '#DC143C', '#808080']
     
-    ax.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%',
-           startangle=90, textprops={'fontsize': 12, 'fontweight': 'bold'})
-    ax.set_title('Sentiment Category Distribution', fontweight='bold', fontsize=14)
+    ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%',
+            startangle=90, textprops={'fontsize': 12, 'fontweight': 'bold'})
+    ax1.set_title('Overall Sentiment Distribution', fontweight='bold', fontsize=14)
+    
+    # Right: Granular bar chart - 6 categories
+    categories = ['Strong\nPositive\n(>0.3)', 'Positive\n(0.05-0.3)', 
+                  'Weak Pos\n(0-0.05)', 'Weak Neg\n(0 to -0.05)',
+                  'Negative\n(-0.05 to -0.3)', 'Strong\nNegative\n(<-0.3)']
+    counts = [strong_positive, positive, weak_positive, 
+              weak_negative, negative, strong_negative]
+    colors_bar = ['#006400', '#2E8B57', '#90EE90', 
+                  '#FFB6C1', '#DC143C', '#8B0000']
+    
+    bars = ax2.bar(range(len(categories)), counts, color=colors_bar, alpha=0.8, edgecolor='black')
+    ax2.set_xticks(range(len(categories)))
+    ax2.set_xticklabels(categories, fontsize=9)
+    ax2.set_ylabel('Word Count', fontweight='bold', fontsize=12)
+    ax2.set_title('Granular Sentiment Breakdown', fontweight='bold', fontsize=14)
+    ax2.grid(alpha=0.3, axis='y')
+    
+    # Add count labels
+    for bar, count in zip(bars, counts):
+        if count > 0:
+            height = bar.get_height()
+            ax2.text(bar.get_x() + bar.get_width()/2., height,
+                    f'{count}', ha='center', va='bottom', fontweight='bold', fontsize=9)
     
     plt.tight_layout()
     return fig

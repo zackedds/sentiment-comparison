@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from bias_snapshot import preprocess_text, analyze_sentiment, download_nltk_data
 
 
-def load_articles(json_path="test_articles.json", topic=None):
+def load_articles(json_path="data/test_articles.json", topic=None):
     """Load articles from JSON file."""
     with open(json_path, 'r') as f:
         data = json.load(f)
@@ -162,7 +162,7 @@ def plot_dashboard(ax, metrics_a, metrics_b, title_a, title_b):
     ax.plot([0.5, 0.5], [0, 0.8], 'k-', alpha=0.2, transform=ax.transAxes)
 
 
-def list_topics(json_path="test_articles.json"):
+def list_topics(json_path="data/test_articles.json"):
     """List all available topics in the JSON file."""
     with open(json_path, 'r') as f:
         data = json.load(f)
@@ -184,17 +184,17 @@ def main():
     # Check for command line arguments
     if len(sys.argv) > 1:
         if sys.argv[1] == '--list':
-            json_file = sys.argv[2] if len(sys.argv) > 2 else "test_articles.json"
+            json_file = sys.argv[2] if len(sys.argv) > 2 else "data/test_articles.json"
             list_topics(json_file)
             return
         elif sys.argv[1] == '--file':
-            json_file = sys.argv[2] if len(sys.argv) > 2 else "test_articles.json"
+            json_file = sys.argv[2] if len(sys.argv) > 2 else "data/test_articles.json"
             topic = sys.argv[3] if len(sys.argv) > 3 else None
         else:
-            json_file = "test_articles.json"
+            json_file = "data/test_articles.json"
             topic = sys.argv[1]
     else:
-        json_file = "test_articles.json"
+        json_file = "data/test_articles.json"
         topic = None
     
     # Load data
