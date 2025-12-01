@@ -19,6 +19,8 @@ ENV/
 # Output files (optional - uncomment if you don't want to track outputs)
 # output/*.png
 # output/*.csv
+# MVP/MVP_output/*.png
+# MVP/MVP_output/*.csv
 
 # OS
 .DS_Store

@@ -1,183 +1,197 @@
 # Bias Snapshot - Sentiment Analysis Tool
 
-A clean, lightweight Python tool for sentiment analysis using NLTK VADER.
+A Python tool for detecting and visualizing sentiment bias in news articles using VADER sentiment analysis with hybrid normalization.
 
 ## Features
 
-- **Single Article Analysis**: Analyze sentiment of individual texts
-- **Article Comparison**: Side-by-side comparison of two articles
-- **Dataset Statistics**: Corpus-wide word sentiment distribution analysis
-- **Clean Visualizations**: Professional charts with minimal code
+- **Article Comparison**: Side-by-side comparison of articles on the same topic
+- **Hybrid Normalization**: Balances within-topic differences with global corpus context
+- **Word-Level Highlighting**: Interactive web dashboard with sentiment word highlighting
+- **Visualizations**: Professional charts showing sentiment distributions and comparisons
+- **Standalone Analysis**: Command-line tool for batch analysis
 
 ## Quick Start
 
+### Install Dependencies
+
 ```bash
-# Install dependencies
-pip install nltk matplotlib pandas
+pip install -r requirements.txt
+```
 
-# Analyze single text
-python bias_snapshot.py "Your text here"
+### Run Analysis
 
-# Compare two articles
-python compare_articles.py
+```bash
+# Analyze all articles and generate visualizations
+python bias_snapshot_mvp.py
+```
 
-# Generate dataset statistics
-python dataset_stats.py data/real_articles.json
+### Run Web Dashboard
+
+```bash
+# Start the Flask web server
+python app.py
+
+# Open browser to:
+# http://localhost:5000
 ```
 
 ## Project Structure
 
 ```
-bias_snapshot/
-├── initial/                   # MVP for initial evaluation
-│   ├── bias_snapshot_mvp.py   # Single-file MVP demo
-│   ├── README_MVP.md          # MVP documentation
-│   └── mvp_*.png/csv          # Generated outputs
-├── data/                      # Input data
-│   ├── test_articles.json     # Demo articles
-│   └── real_articles.json     # Real-world articles
-├── output/                    # Generated files
-│   ├── *.png                  # Visualizations
-│   └── *.csv                  # Data exports
-├── bias_snapshot.py           # Single article analysis
-├── compare_articles.py        # Article comparison
-├── dataset_stats.py           # Corpus statistics
-└── requirements.txt           # Dependencies
+.
+├── bias_snapshot_mvp.py    # Standalone analysis script
+├── app.py                  # Flask web dashboard
+├── templates/
+│   └── index.html          # Web dashboard frontend
+├── data/
+│   ├── real_articles.json         # Summarized articles
+│   └── real_articles_full.json    # Full-length articles
+├── output/                 # Generated outputs
+│   ├── mvp_article_sentiment.png
+│   ├── mvp_word_distribution.png
+│   └── mvp_results_table.csv
+└── requirements.txt
 ```
 
-## MVP / Initial Evaluation
+## Analysis Script (`bias_snapshot_mvp.py`)
 
-For the initial evaluation version (simpler, focused on requirements):
+Standalone script for analyzing article sentiment with hybrid normalization.
 
-```bash
-cd initial/
-python bias_snapshot_mvp.py
+### Configuration
+
+Edit line 17 in `bias_snapshot_mvp.py`:
+
+```python
+USE_FULL_ARTICLES = True   # For full-length articles (hybrid normalization)
+USE_FULL_ARTICLES = False  # For summarized articles (raw scoring)
 ```
 
-See `initial/README_MVP.md` for details. This version demonstrates:
-- VADER sentiment analysis output
-- Preprocessing evidence (tokenization, cleaning)
-- Dataset adequacy validation
-- Basic exploratory data analysis
+### Outputs
 
-## Single Article Analysis
+1. **mvp_article_sentiment.png** - Pairwise comparison chart showing sentiment scores
+2. **mvp_word_distribution.png** - Word-level sentiment distribution (histogram + pie chart)
+3. **mvp_results_table.csv** - Summary table of all articles with scores
 
-```bash
-# Default sample
-python bias_snapshot.py
+### Features
 
-# Your own text
-python bias_snapshot.py "This product is amazing!"
-```
+- **Hybrid Normalization**: 40% pairwise + 60% corpus-relative
+  - Preserves within-topic differences
+  - Maintains global corpus context
+  - Prevents forcing articles into opposition
+- **Adaptive Scoring**: Different thresholds for full vs summarized articles
+- **Neutral Word Filtering**: Excludes neutral words (score = 0) from analysis
 
-**Output:**
-- Console summary (word counts, average sentiment)
-- Horizontal bar chart (top positive/negative words)
+## Web Dashboard (`app.py`)
 
-## Article Comparison
+Interactive Flask web application for comparing articles with word-level highlighting.
 
-```bash
-# Compare articles using default topic (first in JSON)
-python compare_articles.py
+### Features
 
-# List all available topics in a file
-python compare_articles.py --list
-python compare_articles.py --list data/real_articles.json
-
-# Compare a specific topic from test_articles.json
-python compare_articles.py demo_remote_work
-
-# Compare from a different JSON file
-python compare_articles.py --file data/real_articles.json ai_labor_automation
-python compare_articles.py --file data/real_articles.json trump_tariffs
-python compare_articles.py --file data/real_articles.json ai_bubble_boom
-```
-
-**Output:**
-- Side-by-side bar charts showing top words from each article (titles auto-truncated)
-- Minimal dashboard with:
-  - Average sentiment scores
+- **Topic Selection**: Dropdown to select any topic from the dataset
+- **Side-by-Side Comparison**: View both articles (A and B) simultaneously
+- **Sentiment Scores**: 
+  - Normalized score (hybrid normalization)
+  - Raw score (absolute VADER sentiment)
   - Positive/negative word counts
-  - Sentiment difference between articles (color-coded)
+- **Word Highlighting**: 
+  - 🟢 Green = Positive sentiment words
+  - 🔴 Pink = Negative sentiment words
+  - Hover over words to see exact sentiment score
 
-**Demo Topics (data/test_articles.json):**
-- `demo_remote_work` - Perspectives on remote vs. office work
-- `demo_electric_vehicles` - Electric vs. gas-powered transportation debate
+### Usage
 
-**Real Topics (data/real_articles.json):**
-- `ai_labor_automation` - AI's impact on jobs and employment
-- `trump_tariffs` - Trump administration tariff policies
-- `ai_bubble_boom` - AI investment: bubble or sustainable boom
+1. Start the server: `python app.py`
+2. Open `http://localhost:5000` in your browser
+3. Select a topic from the dropdown
+4. View side-by-side comparison with highlighted sentiment words
 
-## Test Data Format
+## Hybrid Normalization
 
-Edit `test_articles.json` to add your own topics. Structure:
+The tool uses a hybrid normalization approach that combines:
+
+- **40% Pairwise**: Normalizes relative to the topic pair mean (highlights within-topic differences)
+- **60% Corpus-Relative**: Normalizes relative to the global corpus mean (maintains global context)
+
+This approach:
+- ✅ Shows relative differences between articles on the same topic
+- ✅ Preserves whether articles are positive/negative relative to the corpus
+- ✅ Prevents forcing articles into opposition when they're on the same side
+- ✅ Allows neutral articles to remain neutral
+
+### Example
+
+If two articles both have positive sentiment:
+- **Pure Pairwise**: Would force one positive, one negative
+- **Hybrid**: Both can remain positive, but shows which is MORE positive
+
+## Data Format
+
+Articles are stored in JSON format:
 
 ```json
 {
   "topics": {
-    "your_topic_key": {
-      "name": "Display Name",
+    "topic_key": {
+      "name": "Topic Display Name",
       "description": "Brief description",
       "article_a": {
-        "title": "First Article Title",
+        "title": "Article Title",
         "source": "Source Name",
-        "stance": "pro",
+        "stance": "pro|con|neutral",
         "content": "Article text..."
       },
       "article_b": {
-        "title": "Second Article Title",
-        "source": "Source Name", 
-        "stance": "con",
+        "title": "Article Title",
+        "source": "Source Name",
+        "stance": "pro|con|neutral",
         "content": "Article text..."
       }
     }
-  },
-  "metadata": {
-    "default_topic": "your_topic_key"
   }
 }
 ```
 
-## Code Structure
+## Technical Details
 
-**bias_snapshot.py** - Core functions:
-- `preprocess_text()` - Clean and tokenize
-- `analyze_sentiment()` - VADER sentiment scoring
-- `create_chart()` - Single article visualization
-- `analyze_text()` - Main analysis pipeline
+### Sentiment Analysis
 
-**compare_articles.py** - Comparison functions:
-- `load_articles()` - Load from JSON
-- `compare_articles()` - Analyze and compare two texts
-- `create_comparison_chart()` - Side-by-side visualization
-- `plot_dashboard()` - Minimal metrics dashboard
+- **Model**: VADER (Valence Aware Dictionary and sEntiment Reasoner)
+- **Preprocessing**: 
+  - Tokenization (NLTK Punkt)
+  - Lowercase conversion
+  - Punctuation removal
+- **Scoring**: Compound score from VADER (-1 to +1)
 
-## Dataset Statistics
+### Normalization Methods
 
-Analyze word-level sentiment distribution across your entire corpus:
+1. **Corpus-Relative**: `score - corpus_mean`
+2. **Pairwise**: `score - pair_mean`
+3. **Hybrid**: `0.4 × pairwise + 0.6 × corpus_relative`
 
-```bash
-# Analyze all articles in a dataset
-python dataset_stats.py data/real_articles.json
-```
+### Output Statistics
 
-**Output:**
-- Console: corpus overview, sentiment distribution, top frequent words, article table
-- Saved to `output/`:
-  - `word_distribution.png` - Positive/negative word distribution (excluding neutral)
-  - `sentiment_breakdown.png` - Pie chart + granular 6-category breakdown
-  - `article_stats.csv` - Article-level comparison data
+- Article-level sentiment scores
+- Word-level sentiment distribution
+- Positive/negative/neutral word counts
+- Corpus mean and median
+- Standard deviation
 
-**Key Insights:**
-- Shows word sentiment follows a distribution (most words are neutral)
-- Reveals corpus-level patterns across all articles
-- Useful for research presentations and project documentation
+## Requirements
 
-## Ready for Extension
+- Python 3.7+
+- nltk >= 3.8
+- matplotlib >= 3.7.0
+- pandas >= 2.0.0
+- flask >= 2.3.0
+- numpy >= 1.24.0
 
-Clean, modular code ready for:
-- Web interfaces (FastAPI/Flask/Streamlit)
-- Batch processing
-- Additional metrics
-- Custom visualizations
+## Development
+
+The codebase is designed to be:
+- **Standalone**: `bias_snapshot_mvp.py` has no external dependencies
+- **Modular**: Functions can be imported and reused
+- **Minimal**: Ultra-MVP approach with essential features only
+
+## License
+
+This project is part of a university course assignment.

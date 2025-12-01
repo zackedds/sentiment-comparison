@@ -1,0 +1,187 @@
+% Minimal ACM LaTeX template (conference-ready). Swap options as needed.
+% Review: \documentclass[manuscript,review,anonymous]{acmart}
+% Camera-ready: \documentclass[sigconf]{acmart}
+\documentclass[sigconf,nonacm]{acmart} % nonacm removes ACM rights/permissions text
+\usepackage{graphicx}
+\settopmatter{printacmref=false}        % hides the ACM Reference Format box
+\setcopyright{none}
+
+% Metadata replace with your actual info
+\title{Bias Snapshot: Detecting and Visualizing Sentiment Bias in News Articles}
+\subtitle{Progress Report - Group 54}
+\author{Kamil, Sulabh, Zack, Nikhil}
+\affiliation{%
+  \institution{University of Illinois Urbana-Champaign}
+%   \country{USA}
+}
+
+% Optional: uncomment for colored links in screen PDFs
+% \citestyle{acmauthoryear}
+% \settopmatter{printacmref=true} % set to false to hide ACM ref format box
+
+\begin{document}
+
+\begin{abstract}
+This report presents our progress on Bias Snapshot, a tool for detecting and visualizing sentiment bias in news coverage. We use VADER sentiment analysis to identify tone differences between articles covering the same topic from opposing perspectives. Our current implementation processes six articles across three politically charged topics, applying adaptive normalization to handle both full-length and summarized content. Initial results show clear sentiment separation between pro and con stances, with normalized scores ranging from $-0.058$ to $+0.069$. We've confirmed the dataset is adequate and the preprocessing pipeline is functional. Next steps include expanding the dataset, integrating contextual models, and developing LLM-powered summarization for end users.
+\end{abstract}
+
+% ACM CCS (optional but commonly required). Generate real terms at https://dl.acm.org/ccs
+% \begin{CCSXML}
+% <ccs2012>
+%  <concept>
+%   <concept_id>10002951.10003260.10003272</concept_id>
+%   <concept_desc>Information systems~Information retrieval</concept_desc>
+%   <concept_significance>500</concept_significance>
+%  </concept>
+% </ccs2012>
+% \end{CCSXML}
+% \ccsdesc[500]{Information systems~Information retrieval}
+
+% \keywords{keywords, comma, separated}
+
+\maketitle
+
+\section{Summary}
+This report documents our progress on Bias Snapshot, a sentiment analysis tool for detecting and visualizing bias in news coverage. We've successfully implemented the core pipeline: text preprocessing, VADER-based sentiment scoring with adaptive normalization, and visualization generation. Our dataset currently includes six full-length articles across three politically charged topics, each with opposing perspectives. Early results are promising, the model correctly identifies sentiment polarity differences that align with article stances, achieving separation between pro and con articles with normalized scores ranging from $-0.058$ to $+0.069$. We've validated that our preprocessing approach is sound and the dataset is adequate for continued development. The following sections detail our methodology, initial evaluation results, and insights gained so far.
+
+\section{Introduction}
+Modern media bias often manifests not through outright misinformation, but through subtle differences in word choice, framing, and tone. While readers can generally detect extreme bias, the nuanced language shifts that color supposedly objective reporting are harder to identify without computational tools. Our project addresses this gap by building Bias Snapshot, a system that quantifies and visualizes sentiment differences between news articles covering the same topic from opposing perspectives.
+
+The challenge lies in several dimensions. First, professional journalism tends to cluster near neutral language, making sentiment signals weak and noisy. Second, we need to distinguish between relative bias (Article A vs. Article B) and absolute bias (both articles leaning the same direction). Third, most news text consists of factual, zero-sentiment words, with only a small fraction actually carries tone. Our approach uses VADER sentiment analysis at the token level, filters out neutral words to amplify the signal, and applies corpus-relative normalization to reveal comparative bias patterns.
+
+The current milestone demonstrates a working MVP: we preprocess articles, compute normalized sentiment scores, and generate visualizations that clearly separate pro and con stances. Looking ahead, we plan to expand the dataset significantly and integrate an LLM-based summarization layer that translates our technical findings into accessible insights for end users.
+\section{Methods}
+
+\subsection{Data Collection and Preprocessing}
+
+Our dataset comprises six full-length news articles across three politically and economically charged topics: AI and labor automation, Trump administration tariff policies, and AI investment sustainability. Each topic includes two articles representing opposing perspectives (pro/con or different editorial stances). Articles were manually selected from reputable news sources to ensure they cover the same underlying events or issues while differing in framing and tone. We also maintain summarized versions of the same articles to evaluate how text length affects sentiment detection.
+
+\textbf{Dataset Adequacy:} With 4,480 total tokens (236 sentiment-bearing after filtering neutrals), we have sufficient data to establish corpus-level statistics and validate our normalization approach. Article lengths range from 505 to 1,165 words, providing diversity without introducing extreme outliers. The dataset balances pro ($n=2$), con ($n=3$), and neutral ($n=1$) stances, enabling stance-alignment validation.
+
+\textbf{Preprocessing Pipeline:} We apply a minimal but effective pipeline: tokenization (NLTK Punkt), lowercasing, and punctuation-only token removal. Critically, we retain stop words because VADER's lexicon handles intensifiers ("very"), negations ("not"), and modifiers ("but") that frequently appear as common words. Removing them would break sentiment context. Figure~\ref{fig:word_dist} shows the distribution of sentiment scores after preprocessing, demonstrating clear separation between positive and negative sentiment-bearing words.
+
+\subsection{Sentiment Analysis}
+
+We employed VADER (Valence Aware Dictionary and sEntiment Reasoner), a lexicon-based sentiment analysis tool specifically designed for social media and short-form text~\cite{hutto2014vader}. VADER generates sentiment scores for each token on a continuous scale from $-1$ (most negative) to $+1$ (most positive), with a compound score representing the overall sentiment intensity.
+
+For each article, we computed:
+\begin{itemize}
+    \item Token-level sentiment scores using VADER's \texttt{polarity\_scores} function
+    \item Article-level aggregate sentiment (mean of non-neutral token scores)
+    \item Sentiment category distributions (positive: score $> 0.01$, negative: score $< -0.01$, neutral: score $= 0$)
+\end{itemize}
+
+\subsection{Adaptive Normalization for Full-Length Articles}
+
+Initial analysis revealed that professional news articles exhibit minimal sentiment variance (corpus mean $= 0.0068$), with 94.7\% of tokens receiving neutral scores. To address this signal dilution, we implemented two key methodological adjustments:
+
+\textbf{1. Neutral Word Exclusion:} We filter tokens with sentiment scores of exactly $0.0$ before computing aggregate statistics. This reduces the analyzed corpus from 4,480 tokens to 236 sentiment-bearing tokens, amplifying the signal while maintaining analytical validity since neutral words contribute no sentiment information.
+
+\textbf{2. Corpus-Relative Scoring:} For full-length articles, we employ relative sentiment scoring where each article's score is normalized against the corpus mean ($0.1283$ for non-neutral words). The displayed sentiment score is calculated as:
+
+\begin{equation}
+    \text{Relative Score} = \text{Article Mean} - \text{Corpus Mean}
+\end{equation}
+
+This normalization transforms absolute sentiment values into comparative measures, revealing which articles are more positive or negative relative to the dataset baseline. Positive relative scores indicate above-average positive sentiment, where as negative scores indicate below-average sentiment.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.0\linewidth]{MVP/MVP_output/mvp_word_distribution.png}
+    \caption{Distribution of sentiment scores across the corpus. Left: Histogram showing positive (green) and negative (red) non-neutral word sentiment distributions. Right: Pie chart of overall sentiment categories, with 66.5\% positive and 33.5\% negative words after filtering 94.7\% neutral tokens.}
+    \label{fig:word_dist}
+\end{figure}
+
+
+For summarized articles, we retain raw VADER scores, as the summarization process naturally amplifies sentiment extremes, producing more discriminative absolute values without normalization.
+
+\subsection{Evaluation Metrics}
+
+We assess model performance through:
+\begin{itemize}
+    \item \textbf{Stance alignment:} Correlation between declared article stance (pro/con) and sentiment polarity
+    \item \textbf{Distributional analysis:} Examination of sentiment score distributions across the corpus
+    \item \textbf{Visual discrimination:} Ability to visually distinguish opposing perspectives in side-by-side comparisons
+\end{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1.0\linewidth]{MVP/MVP_output/mvp_article_sentiment.png}
+    \caption{Article-level sentiment comparison. Each horizontal bar represents the normalized sentiment score for one article (relative to corpus mean of 0.128). Articles are grouped by topic with stance labels ([pro], [con], [neutral]) shown on the right. Clear visual separation between opposing perspectives validates the detection approach.}
+    \label{fig:article_sent}
+\end{figure}
+
+\subsection{Implementation}
+
+The MVP implementation consists of a single Python script (275 lines) utilizing NLTK for NLP operations, pandas for data manipulation, and matplotlib for visualization. A configuration flag (\texttt{USE\_FULL\_ARTICLES}) toggles between article types, automatically applying the appropriate scoring methodology (normalized vs. raw) and sentiment thresholds ($\pm 0.01$ vs. $\pm 0.05$).
+
+\section{Initial Evaluation and Results}
+
+Our MVP successfully demonstrates bias detection across the test dataset. Table~\ref{tab:results} summarizes the key findings for each article. Normalized sentiment scores range from $-0.058$ (Trump Tariffs con article) to $+0.069$ (AI Bubble pro article), with clear separation between pro and con stances within each topic.
+
+\begin{table}[h]
+\centering
+\caption{Article-Level Sentiment Results (Full-Length, Normalized)}
+\label{tab:results}
+\begin{tabular}{lcc}
+\hline
+\textbf{Article} & \textbf{Stance} & \textbf{Sentiment} \\
+\hline
+AI Labor Automation A & con & $-0.030$ \\
+AI Labor Automation B & neutral & $+0.023$ \\
+Trump Tariffs A & con & $-0.058$ \\
+Trump Tariffs B & pro & $+0.051$ \\
+AI Bubble/Boom A & pro & $+0.069$ \\
+AI Bubble/Boom B & con & $-0.024$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Stance Alignment:} All pro-stance articles exhibit positive normalized scores, while con-stance articles show negative scores. This $100\%$ alignment validates that our method captures real sentiment differences rather than noise.
+
+\textbf{Magnitude Analysis:} The Trump Tariffs topic shows the strongest separation ($\Delta = 0.109$ between pro and con), while AI Labor Automation shows the weakest ($\Delta = 0.053$). This variability likely reflects genuine differences in how polarizing each topic is in media coverage.
+
+\textbf{Distributional Evidence:} Figure~\ref{fig:word_dist} displays the corpus-wide word sentiment distribution. After filtering 94.7\% neutral words, we observe 66.5\% positive and 33.5\% negative sentiment-bearing tokens. This 2:1 ratio indicates that news articles generally employ more positive than negative language, which justified our decision to use corpus-relative scoring rather than assuming a zero baseline.
+
+Figure~\ref{fig:article_sent} shows the article-level comparison chart. The visual separation between opposing articles is immediately apparent, confirming that the normalized scores translate into meaningful, interpretable visualizations suitable for end-user presentation.
+
+\section{Insights and Next Steps}
+
+\subsection{Key Insights So Far}
+
+Working through this milestone has revealed several important findings that will shape our final implementation:
+
+\textbf{Neutral word filtering is essential.} Our biggest breakthrough came from recognizing that 94.7\% of news article tokens are sentiment-neutral. Including them in averages creates massive signal dilution, causing corpus means tohover near zero and article differences become barely detectable. Filtering zeros before aggregation amplified our signal 8-20x while maintaining analytical validity.
+
+\textbf{Professional journalism requires normalization.} Unlike social media text (VADER's original domain), news articles cluster tightly around slightly-positive language ($\mu = 0.128$). Comparing raw scores would miss relative differences. Corpus-relative scoring successfully revealed which articles are more/less biased than the dataset baseline.
+
+\textbf{Stance alignment validates the approach.} Perfect correlation between article stance labels and sentiment polarity (100\% accuracy across 6 articles) suggests we're capturing real bias patterns, not just random noise or length effects.
+
+\subsection{Realistic Assessment of Final Goals}
+
+Based on our progress, we've revised our project scope to be more realistic:
+
+\textbf{Achievable by December:}
+\begin{itemize}
+    \item Expand dataset to 10-15 articles across more topics.
+    \item Build interactive web dashboard for visualization (likely Streamlit or Flask)
+    \item Integrate LLM summarization to generate plain-language explanations
+    \item Add word-level highlighting to show which specific terms drive sentiment scores
+\end{itemize}
+
+\textbf{Descoped (unrealistic for semester timeline):}
+\begin{itemize}
+    \item Real-time article scraping and processing
+\end{itemize}
+
+The core functionality: detecting, quantifying, and visualizing sentiment bias between article pairs, is proven and working. Our remaining work focuses on scaling the dataset, refining the models, and building user-facing features that make the analysis accessible to non-technical audiences.
+
+\begin{thebibliography}{1}
+
+\bibitem{hutto2014vader}
+C.~J. Hutto and E.~Gilbert.
+\newblock VADER: A parsimonious rule-based model for sentiment analysis of social media text.
+\newblock In {\em Proceedings of the International AAAI Conference on Web and Social Media}, volume~8, pages 216--225, 2014.
+
+\end{thebibliography}
+
+\end{document}

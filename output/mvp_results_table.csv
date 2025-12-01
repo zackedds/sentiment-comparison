@@ -1,0 +1,15 @@
+Topic,Article,Stance,Sentiment Score,Raw Score,Positive Words,Negative Words,Total Words
+AI and Labor Automation,AI and Labor Automation - ARTICLE_A,con,0.0526,0.0985,17,8,508
+AI and Labor Automation,AI and Labor Automation - ARTICLE_B,neutral,0.1053,0.1511,32,15,1165
+Trump's Tariffs,Trump's Tariffs - ARTICLE_A,con,0.0243,0.0702,35,23,1056
+Trump's Tariffs,Trump's Tariffs - ARTICLE_B,pro,0.1338,0.1797,26,11,505
+AI Bubble vs. Boom,AI Bubble vs. Boom - ARTICLE_A,pro,0.1406,0.1968,23,7,531
+AI Bubble vs. Boom,AI Bubble vs. Boom - ARTICLE_B,con,0.0485,0.1047,24,15,715
+California $20 Wage,California $20 Wage - ARTICLE_A,con,-0.1723,-0.1871,5,14,341
+California $20 Wage,California $20 Wage - ARTICLE_B,pro,0.1483,0.1335,54,26,1113
+Overturning Roe v. Wade,Overturning Roe v. Wade - ARTICLE_A,pro,0.0199,0.0419,95,74,2171
+Overturning Roe v. Wade,Overturning Roe v. Wade - ARTICLE_B,con,0.0665,0.0885,80,54,1777
+Trump's Pause on Asylum decisions after National Guardsmen shooting,Trump's Pause on Asylum decisions after National Guardsmen shooting - ARTICLE_A,neutral,0.0362,0.0356,17,16,631
+Trump's Pause on Asylum decisions after National Guardsmen shooting,Trump's Pause on Asylum decisions after National Guardsmen shooting - ARTICLE_B,con,-0.0173,-0.0179,44,41,1058
+Gun Control Debate,Gun Control Debate - ARTICLE_A,con,-0.1026,-0.1874,48,103,1187
+Gun Control Debate,Gun Control Debate - ARTICLE_B,pro,-0.1312,-0.2160,45,117,1328

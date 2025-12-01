@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bias Snapshot - MVP Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 { margin-bottom: 20px; color: #333; }
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .article-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .article-header {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .article-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .article-meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .scores {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .score-box {
+            padding: 10px 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .score-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .score-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .positive { background: #d4edda; color: #155724; }
+        .negative { background: #f8d7da; color: #721c24; }
+        .neutral { background: #e2e3e5; color: #383d41; }
+        .content {
+            line-height: 1.8;
+            font-size: 14px;
+            color: #333;
+        }
+        .word {
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+        .word.positive {
+            background: #90EE90;
+            font-weight: bold;
+        }
+        .word.negative {
+            background: #FFB6C1;
+            font-weight: bold;
+        }
+        .word:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Bias Snapshot - MVP Dashboard</h1>
+        
+        <div class="controls">
+            <label for="topic-select"><strong>Select Topic:</strong></label>
+            <select id="topic-select" onchange="loadTopic()">
+                <option value="">-- Choose a topic --</option>
+                {% for topic in topics %}
+                <option value="{{ topic }}">{{ topic }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div id="comparison" class="comparison">
+            <div class="empty">Select a topic to compare articles</div>
+        </div>
+    </div>
+
+    <script>
+        function loadTopic() {
+            const topic = document.getElementById('topic-select').value;
+            if (!topic) {
+                document.getElementById('comparison').innerHTML = '<div class="empty">Select a topic to compare articles</div>';
+                return;
+            }
+            
+            document.getElementById('comparison').innerHTML = '<div class="loading">Loading analysis...</div>';
+            
+            fetch(`/api/analyze/${encodeURIComponent(topic)}`)
+                .then(r => r.json())
+                .then(data => {
+                    displayComparison(data);
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('comparison').innerHTML = '<div class="empty">Error loading data</div>';
+                });
+        }
+        
+        function displayComparison(data) {
+            const comparison = document.getElementById('comparison');
+            comparison.innerHTML = '';
+            
+            ['a', 'b'].forEach(key => {
+                const articleKey = `article_${key}`;
+                if (!data[articleKey]) return;
+                
+                const article = data[articleKey];
+                const panel = createArticlePanel(article);
+                comparison.appendChild(panel);
+            });
+        }
+        
+        function createArticlePanel(article) {
+            const panel = document.createElement('div');
+            panel.className = 'article-panel';
+            
+            const normalized = article.normalized_score || 0;
+            const raw = article.raw_score || 0;
+            const scoreClass = normalized > 0 ? 'positive' : normalized < 0 ? 'negative' : 'neutral';
+            
+            panel.innerHTML = `
+                <div class="article-header">
+                    <div class="article-title">${article.title}</div>
+                    <div class="article-meta">
+                        <strong>Source:</strong> ${article.source} | 
+                        <strong>Stance:</strong> <span style="text-transform: uppercase;">${article.stance}</span>
+                    </div>
+                    <div class="scores">
+                        <div class="score-box ${scoreClass}">
+                            <div class="score-label">Normalized Score</div>
+                            <div class="score-value">${normalized.toFixed(4)}</div>
+                        </div>
+                        <div class="score-box">
+                            <div class="score-label">Raw Score</div>
+                            <div class="score-value">${raw.toFixed(4)}</div>
+                        </div>
+                        <div class="score-box">
+                            <div class="score-label">Sentiment Words</div>
+                            <div class="score-value">+${article.positive_count} / -${article.negative_count}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content" id="content-${article.title.substring(0,10)}">
+                    ${highlightWords(article.content, article.word_scores)}
+                </div>
+            `;
+            
+            return panel;
+        }
+        
+        function highlightWords(text, wordScores) {
+            // Create a regex pattern from all words in wordScores
+            const words = Object.keys(wordScores).sort((a, b) => b.length - a.length); // Sort by length to match longer words first
+            
+            // Escape special regex characters and create pattern
+            const pattern = new RegExp('\\b(' + words.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\\b', 'gi');
+            
+            return text.replace(pattern, (match) => {
+                const lowerMatch = match.toLowerCase();
+                if (wordScores[lowerMatch]) {
+                    const score = wordScores[lowerMatch];
+                    const className = score > 0.01 ? 'positive' : score < -0.01 ? 'negative' : '';
+                    if (className) {
+                        return `<span class="word ${className}" title="Sentiment: ${score.toFixed(3)}">${match}</span>`;
+                    }
+                }
+                return match;
+            });
+        }
+    </script>
+</body>
+</html>
+

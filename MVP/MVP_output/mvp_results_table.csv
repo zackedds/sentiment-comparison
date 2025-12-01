@@ -1,7 +1,0 @@
-Topic,Article,Stance,Sentiment Score,Positive Words,Negative Words,Total Words
-AI and Labor Automation,AI and Labor Automation - ARTICLE_A,con,-0.0298,17,8,508
-AI and Labor Automation,AI and Labor Automation - ARTICLE_B,neutral,0.0228,32,15,1165
-Trump's Tariffs,Trump's Tariffs - ARTICLE_A,con,-0.0580,35,23,1056
-Trump's Tariffs,Trump's Tariffs - ARTICLE_B,pro,0.0514,26,11,505
-AI Bubble vs. Boom,AI Bubble vs. Boom - ARTICLE_A,pro,0.0685,23,7,531
-AI Bubble vs. Boom,AI Bubble vs. Boom - ARTICLE_B,con,-0.0235,24,15,715

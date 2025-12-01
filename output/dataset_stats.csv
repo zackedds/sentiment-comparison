@@ -1,5 +1,0 @@
-topic,title,source,stance,avg_sentiment,positive_words,negative_words,neutral_words,total_words,pct_positive,pct_negative,pct_neutral
-Remote Work,Remote Work Revolution: The Future is Here,TechForward Magazine,pro,0.06103195876288659,17,1,79,97,17.525773195876287,1.0309278350515463,81.44329896907216
-Remote Work,The Hidden Costs of Remote Work,Business Leadership Weekly,con,0.01702156862745098,12,6,84,102,11.76470588235294,5.88235294117647,82.35294117647058
-Electric Vehicles,Electric Vehicles: Driving Toward a Sustainable Future,Green Tech Today,pro,0.04049878048780488,9,1,72,82,10.975609756097562,1.2195121951219512,87.8048780487805
-Electric Vehicles,The Electric Vehicle Problem Nobody Talks About,Automotive Reality Check,con,-0.03725411764705882,5,12,68,85,5.88235294117647,14.117647058823529,80.0
