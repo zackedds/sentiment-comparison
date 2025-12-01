@@ -1,7 +1,3 @@
-"""
-Ultra MVP Flask app for Bias Snapshot dashboard
-"""
-
 from flask import Flask, render_template, jsonify
 import numpy as np
 from bias_snapshot import (
@@ -11,11 +7,9 @@ from bias_snapshot import (
 
 app = Flask(__name__)
 
-# Load data once at startup
 download_nltk_data()
 articles_data = load_data()
 
-# Build article lookup
 articles_by_topic = {}
 for article in articles_data:
     topic = article['topic']
@@ -27,14 +21,12 @@ for article in articles_data:
 
 @app.route('/')
 def index():
-    """Main dashboard page."""
     topics = list(articles_by_topic.keys())
     return render_template('index.html', topics=topics)
 
 
 @app.route('/api/articles/<topic>')
 def get_articles(topic):
-    """Get both articles for a topic."""
     if topic not in articles_by_topic:
         return jsonify({'error': 'Topic not found'}), 404
     
@@ -56,7 +48,6 @@ def get_articles(topic):
 
 @app.route('/api/analyze/<topic>')
 def analyze_topic(topic):
-    """Analyze both articles for a topic with word-level sentiment."""
     if topic not in articles_by_topic:
         return jsonify({'error': 'Topic not found'}), 404
     
@@ -65,7 +56,6 @@ def analyze_topic(topic):
     all_scores = []
     article_scores_dict = {}
     
-    # Analyze both articles
     for key in ['a', 'b']:
         if key not in topic_data:
             continue
@@ -74,7 +64,6 @@ def analyze_topic(topic):
         tokens = preprocess_text(article['content'])
         df = analyze_sentiment(tokens)
         
-        # Get word-level scores
         word_scores = {}
         non_neutral_scores = []
         for _, row in df.iterrows():
@@ -100,7 +89,6 @@ def analyze_topic(topic):
             'negative_count': len([s for s in non_neutral_scores if s < -0.01])
         }
     
-    # Calculate hybrid normalization (40% pairwise, 60% corpus-relative)
     if len(article_scores_dict) == 2:
         for key in ['a', 'b']:
             if f'article_{key}' in results:
