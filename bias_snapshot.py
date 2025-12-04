@@ -20,8 +20,10 @@ def download_nltk_data():
 
 
 def preprocess_text(text):
+    # removes extra whitespace
     text = re.sub(r'\s+', ' ', text.strip())
     tokens = word_tokenize(text.lower())
+    # removes token that are fully comprised of punctuation
     tokens = [t for t in tokens if not all(c in '.,!?;:"()[]{}' for c in t)]
     return tokens
 
@@ -83,6 +85,7 @@ def analyze_dataset(articles):
     
     for article in articles:
         tokens = preprocess_text(article['content'])
+        # [token, score]
         df = analyze_sentiment(tokens)
         article_dfs.append((article, df))
         non_neutral_scores = [s for s in df['score'].tolist() if s != 0.0]
