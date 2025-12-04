@@ -7,8 +7,7 @@ A Python tool for detecting and visualizing sentiment bias in news articles usin
 - **Article Comparison**: Side-by-side comparison of articles on the same topic
 - **Hybrid Normalization**: Balances within-topic differences with global corpus context
 - **Word-Level Highlighting**: Interactive web dashboard with sentiment word highlighting
-- **Visualizations**: Professional charts showing sentiment distributions and comparisons
-- **Standalone Analysis**: Command-line tool for batch analysis
+- **Visualizations**: Charts showing sentiment distributions and comparisons
 
 ## Quick Start
 
@@ -22,7 +21,7 @@ pip install -r requirements.txt
 
 ```bash
 # Analyze all articles and generate visualizations
-python bias_snapshot_mvp.py
+python bias_snapshot.py
 ```
 
 ### Run Web Dashboard
@@ -45,7 +44,7 @@ python app.py
 │   └── index.html          # Web dashboard frontend
 ├── data/
 │   ├── real_articles.json         # Summarized articles
-│   └── real_articles_full.json    # Full-length articles
+│   └── real_articles_full.json    # Main Corpus, Full-length articles
 ├── output/                 # Generated outputs
 │   ├── mvp_article_sentiment.png
 │   ├── mvp_word_distribution.png
@@ -53,18 +52,9 @@ python app.py
 └── requirements.txt
 ```
 
-## Analysis Script (`bias_snapshot_mvp.py`)
+## Analysis Script (`bias_snapshot.py`)
 
 Standalone script for analyzing article sentiment with hybrid normalization.
-
-### Configuration
-
-Edit line 17 in `bias_snapshot_mvp.py`:
-
-```python
-USE_FULL_ARTICLES = True   # For full-length articles (hybrid normalization)
-USE_FULL_ARTICLES = False  # For summarized articles (raw scoring)
-```
 
 ### Outputs
 
@@ -94,8 +84,8 @@ Interactive Flask web application for comparing articles with word-level highlig
   - Raw score (absolute VADER sentiment)
   - Positive/negative word counts
 - **Word Highlighting**: 
-  - 🟢 Green = Positive sentiment words
-  - 🔴 Pink = Negative sentiment words
+  - Green = Positive sentiment words
+  - Red = Negative sentiment words
   - Hover over words to see exact sentiment score
 
 ### Usage
@@ -104,6 +94,7 @@ Interactive Flask web application for comparing articles with word-level highlig
 2. Open `http://localhost:5000` in your browser
 3. Select a topic from the dropdown
 4. View side-by-side comparison with highlighted sentiment words
+5. Hover over a word to see its sentiment score
 
 ## Hybrid Normalization
 
@@ -113,10 +104,10 @@ The tool uses a hybrid normalization approach that combines:
 - **60% Corpus-Relative**: Normalizes relative to the global corpus mean (maintains global context)
 
 This approach:
-- ✅ Shows relative differences between articles on the same topic
-- ✅ Preserves whether articles are positive/negative relative to the corpus
-- ✅ Prevents forcing articles into opposition when they're on the same side
-- ✅ Allows neutral articles to remain neutral
+- Shows relative differences between articles on the same topic
+- Preserves whether articles are positive/negative relative to the corpus
+- Prevents forcing articles into opposition when they're on the same side
+- Allows neutral articles to remain neutral
 
 ### Example
 
@@ -175,23 +166,3 @@ Articles are stored in JSON format:
 - Positive/negative/neutral word counts
 - Corpus mean and median
 - Standard deviation
-
-## Requirements
-
-- Python 3.7+
-- nltk >= 3.8
-- matplotlib >= 3.7.0
-- pandas >= 2.0.0
-- flask >= 2.3.0
-- numpy >= 1.24.0
-
-## Development
-
-The codebase is designed to be:
-- **Standalone**: `bias_snapshot_mvp.py` has no external dependencies
-- **Modular**: Functions can be imported and reused
-- **Minimal**: Ultra-MVP approach with essential features only
-
-## License
-
-This project is part of a university course assignment.
