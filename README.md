@@ -9,6 +9,26 @@ A Python tool for detecting and visualizing sentiment bias in news articles usin
 - **Word-Level Highlighting**: Interactive web dashboard with sentiment word highlighting
 - **Visualizations**: Charts showing sentiment distributions and comparisons
 
+## Quickest Start
+
+### Install Dependencies and Run Analysis and Web Dashboard
+
+#### Important Note on Execution
+
+This one-line command executes the **Analysis Phase** first, followed by the **Web Dashboard**.
+Close the pop-up of the distributions manually. This will allow the script to proceed and launch the web dashboard.
+
+#### Mac/Linux
+```bash
+pip install -r requirements.txt; python bias_snapshot.py; python app.py
+```
+
+#### Windows
+```cmd
+pip install -r requirements.txt & python bias_snapshot.py & python app.py
+```
+
+
 ## Quick Start
 
 ### Install Dependencies
